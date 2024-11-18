@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agriculture Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://source.unsplash.com/1600x900/?agriculture') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        header {
+            background: rgba(0, 128, 0, 0.9);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: white;
+            margin: 0;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        nav a:hover {
+            background: #4caf50;
+            color: white;
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            color: #4caf50;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 10px;
+            font-size: 24px;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #4caf50;
+            color: white;
+        }
+        .message {
+            color: #d9534f;
+            margin: 10px 0;
+        }
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .search-section input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .update-crop-form {
+            display: none;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .search-section {
+                flex-direction: column;
+            }
+            nav a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Agriculture Management System</h1>
+        <nav>
+            <a href="#addCrop">Add Crop</a>
+            <a href="#viewCrops">View Crops</a>
+            <a href="#searchCrop">Search Crop</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h2 id="addCrop">Add a Crop</h2>
+        <form id="addCropForm">
+            <input type="text" id="name" placeholder="Crop Name" required>
+            <input type="text" id="type" placeholder="Type (e.g., Fruit, Vegetable)" required>
+            <input type="number" id="quantityAvailable" placeholder="Quantity Available" required>
+            <input type="text" id="harvestSeason" placeholder="Harvest Season" required>
+            <button type="submit">Add Crop</button>
+            <div class="message" id="addCropMessage"></div>
+        </form>
+
+        <h2 id="viewCrops">Available Crops</h2>
+        <table id="availableCropsTable">
+            <thead>
+                <tr>
+                    <th>Crop ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Quantity Available</th>
+                    <th>Harvest Season</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="availableCropsBody"></tbody>
+        </table>
+
+        <h2 id="searchCrop">Search for a Crop</h2>
+        <div class="search-section">
+            <input type="text" id="searchQuery" placeholder="Search by name, type, or season" />
+            <button id="searchButton">Search</button>
+        </div>
+        <div class="message" id="searchMessage"></div>
+        <table id="searchResults" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Crop ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Quantity Available</th>
+                    <th>Harvest Season</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="searchResultsBody"></tbody>
+        </table>
+
+        <h2>Update a Crop</h2>
+        <div class="update-crop-form">
+            <form id="updateCropForm">
+                <input type="hidden" id="updateCropId">
+                <input type="text" id="updateName" placeholder="Crop Name" required>
+                <input type="text" id="updateType" placeholder="Type (e.g., Fruit, Vegetable)" required>
+                <input type="number" id="updateQuantityAvailable" placeholder="Quantity Available" required>
+                <input type="text" id="updateHarvestSeason" placeholder="Harvest Season" required>
+                <button type="submit">Update Crop</button>
+                <div class="message" id="updateCropMessage"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const addCropForm = document.getElementById('addCropForm');
+        const availableCropsBody = document.getElementById('availableCropsBody');
+        const searchButton = document.getElementById('searchButton');
+        const searchResultsBody = document.getElementById('searchResultsBody');
+        const updateCropForm = document.getElementById('updateCropForm');
+        const updateCropSection = document.querySelector('.update-crop-form');
+
+        // Fetch available crops and display in table
+        async function fetchAvailableCrops() {
+            const response = await fetch('/crops/available');
+            const crops = await response.json();
+            availableCropsBody.innerHTML = '';
+            crops.forEach((crop) => {
+                const row = document.createElement('tr');
+                row.innerHTML = 
+                    `<td>${crop._id}</td>
+                    <td>${crop.name}</td>
+                    <td>${crop.type}</td>
+                    <td>${crop.quantityAvailable}</td>
+                    <td>${crop.harvestSeason}</td>
+                    <td class="action-buttons">
+                        <button class="btn-danger" onclick="deleteCrop('${crop._id}')">Delete</button>
+                        <button onclick="showUpdateForm('${crop._id}', '${crop.name}', '${crop.type}', ${crop.quantityAvailable}, '${crop.harvestSeason}')">Edit</button>
+                    </td>`;
+                availableCropsBody.appendChild(row);
+            });
+        }
+
+        addCropForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const crop = {
+                name: document.getElementById('name').value,
+                type: document.getElementById('type').value,
+                quantityAvailable: document.getElementById('quantityAvailable').value,
+                harvestSeason: document.getElementById('harvestSeason').value,
+            };
+            const response = await fetch('/crops', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(crop),
+            });
+            if (response.ok) {
+                document.getElementById('addCropMessage').innerText = 'Crop added successfully!';
+                fetchAvailableCrops(); // Refresh the list
+                addCropForm.reset(); // Clear form fields
+            } else {
+                document.getElementById('addCropMessage').innerText = 'Error adding crop.';
+            }
+        });
+
+        async function deleteCrop(cropId) {
+            await fetch(`/crops/${cropId}`, { method: 'DELETE' });
+            fetchAvailableCrops(); // Refresh the list
+        }
+
+        searchButton.addEventListener('click', async () => {
+            const query = document.getElementById('searchQuery').value;
+            const response = await fetch(`/crops/search?query=${query}`);
+            const crops = await response.json();
+            searchResultsBody.innerHTML = '';
+            if (crops.length > 0) {
+                document.getElementById('searchResults').style.display = '';
+                crops.forEach((crop) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = 
+                        `<td>${crop._id}</td>
+                        <td>${crop.name}</td>
+                        <td>${crop.type}</td>
+                        <td>${crop.quantityAvailable}</td>
+                        <td>${crop.harvestSeason}</td>
+                        <td class="action-buttons">
+                            <button class="btn-danger" onclick="deleteCrop('${crop._id}')">Delete</button>
+                            <button onclick="showUpdateForm('${crop._id}', '${crop.name}', '${crop.type}', ${crop.quantityAvailable}, '${crop.harvestSeason}')">Edit</button>
+                        </td>`;
+                    searchResultsBody.appendChild(row);
+                });
+            } else {
+                document.getElementById('searchMessage').innerText = 'No crops found.';
+                document.getElementById('searchResults').style.display = 'none';
+            }
+        });
+
+        function showUpdateForm(id, name, type, quantityAvailable, harvestSeason) {
+            document.getElementById('updateCropId').value = id;
+            document.getElementById('updateName').value = name;
+            document.getElementById('updateType').value = type;
+            document.getElementById('updateQuantityAvailable').value = quantityAvailable;
+            document.getElementById('updateHarvestSeason').value = harvestSeason;
+            updateCropSection.style.display = 'block';
+        }
+
+        updateCropForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cropId = document.getElementById('updateCropId').value;
+            const crop = {
+                name: document.getElementById('updateName').value,
+                type: document.getElementById('updateType').value,
+                quantityAvailable: document.getElementById('updateQuantityAvailable').value,
+                harvestSeason: document.getElementById('updateHarvestSeason').value,
+            };
+            const response = await fetch(`/crops/${cropId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(crop),
+            });
+            if (response.ok) {
+                document.getElementById('updateCropMessage').innerText = 'Crop updated successfully!';
+                fetchAvailableCrops(); // Refresh the list
+                updateCropForm.reset(); // Clear form fields
+                updateCropSection.style.display = 'none'; // Hide the update form
+            } else {
+                document.getElementById('updateCropMessage').innerText = 'Error updating crop.';
+            }
+        });
+
+        fetchAvailableCrops(); // Initial fetch of crops
+    </script>
+</body>
+</html>
